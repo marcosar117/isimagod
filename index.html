@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Alumnos</title>
+    <style>
+        body {
+            background-color: #1e90ff; /* Azul */
+            color: white; /* Blanco */
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #ffffff;
+        }
+
+        form {
+            background-color: #0b3d91; /* Azul oscuro */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+        }
+
+        input {
+            margin: 5px;
+            padding: 6px;
+            border-radius: 5px;
+            border: none;
+            font-size: 14px;
+            width: 90%;
+            box-sizing: border-box;
+            display: block;
+        }
+
+        .boton {
+            background-color: #ffffff; /* Blanco */
+            color: #1e90ff; /* Azul */
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 95%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .boton:hover {
+            background-color: #87cefa; /* Azul claro */
+            color: white;
+        }
+
+        .link {
+            background-color: #ffffff; /* Blanco */
+            color: #1e90ff; /* Azul */
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+            display: inline-block;
+        }
+
+        .link:hover {
+            background-color: #87cefa;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Registro de Alumnos</h1>
+    <form id="registro-alumno">
+        <input type="text" name="nombre" placeholder="Nombre" required />
+        <input type="text" name="apellido" placeholder="Apellido" required />
+        <input type="number" name="edad" placeholder="Edad" required min="1" />
+        <input type="text" name="matricula" placeholder="Matrícula" required />
+        <input type="text" name="grado" placeholder="Grado" required />
+        <input type="text" name="grupo" placeholder="Grupo" required />
+        <input type="text" name="clase" placeholder="Clase" required />
+        <button type="submit" class="boton">Registrar</button>
+    </form>
+
+    <!-- Botón para ir a la página de visualización de datos -->
+    <a href="ver-alumnos.html" class="link">Ver Alumnos Registrados</a>
+
+    <script>
+        document.getElementById('registro-alumno').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita que el formulario se envíe de la manera convencional
+
+            // Obtiene los valores del formulario
+            const nombre = this.nombre.value;
+            const apellido = this.apellido.value;
+            const edad = this.edad.value;
+            const matricula = this.matricula.value;
+            const grado = this.grado.value;
+            const grupo = this.grupo.value;
+            const clase = this.clase.value;
+
+            // Crea un objeto para el nuevo alumno
+            const nuevoAlumno = {
+                nombre,
+                apellido,
+                edad,
+                matricula,
+                grado,
+                grupo,
+                clase
+            };
+
+            // Obtiene la lista actual de alumnos del Local Storage
+            const alumnos = JSON.parse(localStorage.getItem('alumnos')) || [];
+            // Agrega el nuevo alumno a la lista
+            alumnos.push(nuevoAlumno);
+            // Almacena la lista actualizada en el Local Storage
+            localStorage.setItem('alumnos', JSON.stringify(alumnos));
+
+            // Reinicia el formulario
+            this.reset();
+            alert("Alumno registrado con éxito!");
+        });
+    </script>
+</body>
+</html>
