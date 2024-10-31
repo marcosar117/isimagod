@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumnos Registrados</title>
+    <style>
+        /* Tu estilo aquí */
+    </style>
+</head>
+<body>
+    <h1>Alumnos Registrados</h1>
+    <table id="tabla-alumnos">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Edad</th>
+                <th>Matrícula</th>
+                <th>Grado</th>
+                <th>Grupo</th>
+                <th>Clase</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Los datos se llenarán aquí -->
+        </tbody>
+    </table>
+
+    <a href="index.html" class="link">Registrar Nuevo Alumno</a>
+
+    <!-- Agrega Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+    <script>
+        // Configuración de Firebase (igual que en index.html)
+        // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyD3asFjicBcPCf2VEnlhfsmcnuDfXecEWs",
+  authDomain: "isimagod-d1fb7.firebaseapp.com",
+  databaseURL: "https://isimagod-d1fb7-default-rtdb.firebaseio.com",
+  projectId: "isimagod-d1fb7",
+  storageBucket: "isimagod-d1fb7.firebasestorage.app",
+  messagingSenderId: "521740112450",
+  appId: "1:521740112450:web:b90342b9f2ca2a40a313db",
+  measurementId: "G-25ENB15DJV"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+        };
+
+        // Inicializa Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Obtiene la tabla donde se mostrarán los alumnos
+        const tablaAlumnos = document.getElementById('tabla-alumnos').getElementsByTagName('tbody')[0];
+
+        // Función para cargar alumnos de Firestore
+        async function cargarAlumnos() {
+            try {
+                const querySnapshot = await db.collection("alumnos").get();
+                querySnapshot.forEach((doc) => {
+                    const alumno = doc.data();
+                    const fila = tablaAlumnos.insertRow();
+                    fila.insertCell(0).textContent = alumno.nombre;
+                    fila.insertCell(1).textContent = alumno.apellido;
+                    fila.insertCell(2).textContent = alumno.edad;
+                    fila.insertCell(3).textContent = alumno.matricula;
+                    fila.insertCell(4).textContent = alumno.grado;
+                    fila.insertCell(5).textContent = alumno.grupo;
+                    fila.insertCell(6).textContent = alumno.clase;
+                });
+            } catch (error) {
+                console.error("Error al cargar los alumnos: ", error);
+                alert("Hubo un error al cargar los alumnos.");
+            }
+        }
+
+        // Llama a la función para cargar los alumnos al cargar la página
+        cargarAlumnos();
+    </script>
+</body>
+</html>
