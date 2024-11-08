@@ -110,8 +110,10 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
+console.log("Inicializando Firebase...");
 firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+console.log("Firebase inicializado");
+const db = firebase.firestore();
 
     async function cargarAlumnos() {
         console.log("Intentando cargar alumnos...");
