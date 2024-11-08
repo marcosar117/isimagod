@@ -110,40 +110,40 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-        };
+firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-        // Inicializa Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+    async function cargarAlumnos() {
+        console.log("Intentando cargar alumnos...");
 
-        // Obtiene la tabla donde se mostrarán los alumnos
-        const tablaAlumnos = document.getElementById('tabla-alumnos').getElementsByTagName('tbody')[0];
+        const tablaAlumnos = document.getElementById("tabla-alumnos").getElementsByTagName("tbody")[0];
+        tablaAlumnos.innerHTML = ""; // Limpiar la tabla antes de llenarla
 
-        // Función para cargar alumnos de Firestore
-        async function cargarAlumnos() {
-            try {
-                const querySnapshot = await db.collection("alumnos").get();
-                querySnapshot.forEach((doc) => {
-                    const alumno = doc.data();
-                    const fila = tablaAlumnos.insertRow();
-                    fila.insertCell(0).textContent = alumno.nombre;
-                    fila.insertCell(1).textContent = alumno.apellido;
-                    fila.insertCell(2).textContent = alumno.edad;
-                    fila.insertCell(3).textContent = alumno.matricula;
-                    fila.insertCell(4).textContent = alumno.grado;
-                    fila.insertCell(5).textContent = alumno.grupo;
-                    fila.insertCell(6).textContent = alumno.clase;
-                });
-            } catch (error) {
-                console.error("Error al cargar los alumnos: ", error);
-                alert("Hubo un error al cargar los alumnos.");
+        try {
+            const querySnapshot = await db.collection("alumnos").get();
+            if (querySnapshot.empty) {
+                console.log("No se encontraron alumnos registrados.");
+                return;
             }
-        }
 
-        // Llama a la función para cargar los alumnos al cargar la página
-        cargarAlumnos();
-    </script>
+            querySnapshot.forEach((doc) => {
+                const alumno = doc.data();
+                console.log("Alumno encontrado:", alumno);
+
+                const fila = tablaAlumnos.insertRow();
+                fila.insertCell().textContent = alumno.nombre || "";
+                fila.insertCell().textContent = alumno.apellido || "";
+                fila.insertCell().textContent = alumno.edad || "";
+                fila.insertCell().textContent = alumno.matricula || "";
+                fila.insertCell().textContent = alumno.grado || "";
+                fila.insertCell().textContent = alumno.grupo || "";
+                fila.insertCell().textContent = alumno.clase || "";
+            });
+        } catch (error) {
+            console.error("Error al cargar alumnos:", error);
+        }
+    }
+    window.onload = cargarAlumnos;
+</script>
 </body>
 </html>
