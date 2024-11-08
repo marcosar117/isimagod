@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Alumnos</title>
     <style>
+        /* Estilos Generales */
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -25,42 +26,41 @@
 
         /* Estilos del Formulario */
         form {
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            width: 100%;
             background-color: #ffffff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
         }
 
-        input {
+        label {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        input[type="text"], input[type="number"] {
             padding: 10px;
+            margin-top: 5px;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 4px;
             font-size: 16px;
         }
 
-        input:focus {
-            outline: none;
-            border-color: #007bff;
-        }
-
-        .boton {
-            background-color: #007bff;
-            color: white;
-            border: none;
+        button {
+            margin-top: 15px;
             padding: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 5px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            font-size: 16px;
         }
 
-        .boton:hover {
+        button:hover {
             background-color: #0056b3;
         }
 
@@ -80,24 +80,38 @@
 <body>
     <h1>Registro de Alumnos</h1>
     <form id="registro-alumno">
-        <input type="text" name="nombre" placeholder="Nombre" required />
-        <input type="text" name="apellido" placeholder="Apellido" required />
-        <input type="number" name="edad" placeholder="Edad" required min="1" />
-        <input type="text" name="matricula" placeholder="Matrícula" required />
-        <input type="text" name="grado" placeholder="Grado" required />
-        <input type="text" name="grupo" placeholder="Grupo" required />
-        <input type="text" name="clase" placeholder="Clase" required />
-        <button type="submit" class="boton">Registrar</button>
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" required>
+
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" required>
+
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad" required>
+
+        <label for="matricula">Matrícula:</label>
+        <input type="text" id="matricula" required>
+
+        <label for="grado">Grado:</label>
+        <input type="text" id="grado" required>
+
+        <label for="grupo">Grupo:</label>
+        <input type="text" id="grupo" required>
+
+        <label for="clase">Clase:</label>
+        <input type="text" id="clase" required>
+
+        <button type="submit">Registrar Alumno</button>
     </form>
 
     <a href="https://marcosar117.github.io/isimagod/ver-alumnos.html" class="link">Ver Alumnos Registrados</a>
 
-    <!-- Agrega Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
     <script>
-        // Configuración de Firebase (reemplaza con tu configuración)
-       // Import the functions you need from the SDKs you need
+        // Configuración de Firebase
+        // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -120,26 +134,26 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
-        // Inicializa Firebase
-        const app = firebase.initializeApp(firebaseConfig);
+        // Inicializar Firebase y Firestore
+        firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Captura el formulario y envía los datos a Firestore
-        document.getElementById('registro-alumno').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            
-            // Obtiene los valores del formulario
-            const nombre = this.nombre.value;
-            const apellido = this.apellido.value;
-            const edad = this.edad.value;
-            const matricula = this.matricula.value;
-            const grado = this.grado.value;
-            const grupo = this.grupo.value;
-            const clase = this.clase.value;
+        // Función para registrar alumno
+        document.getElementById('registro-alumno').addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-            // Guarda los datos en Firestore
+            // Obtener los valores de los campos
+            const nombre = document.getElementById('nombre').value;
+            const apellido = document.getElementById('apellido').value;
+            const edad = parseInt(document.getElementById('edad').value);
+            const matricula = document.getElementById('matricula').value;
+            const grado = document.getElementById('grado').value;
+            const grupo = document.getElementById('grupo').value;
+            const clase = document.getElementById('clase').value;
+
             try {
-                await db.collection("alumnos").add({
+                // Guardar los datos en Firestore
+                await db.collection('alumnos').add({
                     nombre,
                     apellido,
                     edad,
@@ -148,13 +162,16 @@ const analytics = getAnalytics(app);
                     grupo,
                     clase
                 });
-                alert("Alumno registrado con éxito en la nube!");
-                this.reset(); // Limpia el formulario
+
+                // Limpiar el formulario después de guardar
+                document.getElementById('registro-alumno').reset();
+                alert('Alumno registrado exitosamente');
             } catch (error) {
-                console.error("Error al registrar el alumno: ", error);
-                alert("Hubo un error al guardar el alumno.");
+                console.error('Error al registrar el alumno:', error);
+                alert('Hubo un error al registrar el alumno');
             }
         });
     </script>
 </body>
 </html>
+
